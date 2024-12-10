@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .sfondosem {
+            width: 100px;
+            height: 300px;
+            margin: 20px auto;
+            background: black;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        .light {
+            width: 70px;
+            height: 70px;
+            background: grey;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+        .light.red {
+            background: grey;
+        }
+        .light.green {
+            background: grey;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+    <script>
+
+        setTimeout(function(){
+            console.log("HELLO")
+        }, 1000)
+
+        function delayed(){
+            console.log("HELLO in funzione con name")
+        }
+
+
+        setTimeout(delayed, 2000)
+    </script>
+<body>
+    <h1>Misura i tuoi riflessi!</h1>
+    <div class="sfondosem">
+        <div id="redLight1" class="light red"></div>
+        <div id="redLight2" class="light red"></div>
+        <div id="greenLight" class="light green"></div>
+    </div>
+    <button id="startButton" class="button">Clicca qui!</button>
+    <div id="message"></div>
+
+    <script>
+        const redLight1 = document.getElementById("redLight1");
+        const redLight2 = document.getElementById("redLight2");
+        const greenLight = document.getElementById("greenLight");
+        const startButton = document.getElementById("startButton");
+        const message = document.getElementById("message");
+
+        let startTime, endTime;
+        let timerSequence = [];
+        let gameActive = false;
+
+        function resetLights() {
+            redLight1.style.background = "grey";
+            redLight2.style.background = "grey";
+            greenLight.style.background = "grey";
+        }
+
+        function startGame() {
+            resetLights();
+            message.textContent = "Preparati...";
+            startButton.disabled = true;
+            gameActive = false;
+
+            timerSequence = [
+                setTimeout(() => {
+                    redLight1.style.background = "red";
+                }, 1000),
+                setTimeout(() => {
+                    redLight2.style.background = "red";
+                }, 2000),
+                setTimeout(() => {
+                    greenLight.style.background = "green";
+                    message.textContent = "Clicca ora!";
+                    startTime = new Date().getTime();
+                    gameActive = true;
+                }, 3000),
+            ];
+        }
+
+        function handleClick() {
+            if (!gameActive) {
+                message.textContent = "Aspetta il verde!";
+                return;
+            }
+
+            if (greenLight.style.background === "green") {
+                endTime = new Date().getTime();
+                const reactionTime = endTime - startTime;
+                message.textContent = `Il tuo tempo di reazione è: ${reactionTime} ms`;
+                resetLights();
+                clearTimeouts();
+                startButton.disabled = false;
+                gameActive = false;
+            }
+        }
+
+        function clearTimeouts() {
+            timerSequence.forEach(clearTimeout);
+        }
+
+        startButton.addEventListener("click", startGame);
+        document.body.addEventListener("click", handleClick);
+    </script>
+</body>
+</html>
